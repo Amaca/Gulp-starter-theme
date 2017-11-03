@@ -1,0 +1,62 @@
+@import 'variables';
+
+/*--------------------------------------------------
+Base
+--------------------------------------------------*/
+
+html{
+
+}
+
+body{
+
+}
+
+.wrapper{
+	background: #fff;
+    max-width: 1170px;  
+    margin: 0 auto; 
+} 
+
+
+//
+// Fonts
+// -------------------------------------------------- 
+
+body {
+    font-family: Verdana;
+} 
+
+b, strong {
+    font-family: Verdana;
+}
+
+h1, h2, h3, h4, h5, h6 {
+   font-family:  Sans-Serif;
+}
+
+a {
+    color: $font-dark;
+
+    &:hover, &:focus {
+        color: $font-dark;
+        text-decoration: none;
+    }
+
+    &:active, &:visited {
+        color: $font-dark;
+    }
+}
+ 
+@font-face {
+	
+}
+
+
+//
+// Animations
+// --------------------------------------------------
+a, a:hover, button, button:hover, .btnborder, .btntop {
+  transition: all 0.3s ease-in-out;
+}
+

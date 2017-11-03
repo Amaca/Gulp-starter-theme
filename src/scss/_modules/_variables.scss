@@ -1,0 +1,85 @@
+//--------------------------------------------------
+//Variables
+//--------------------------------------------------
+
+// Main Colors
+$brand-primary:         #0e38b1;
+$brand-secondary:       #f0cf61;
+
+// Background Colors:
+$bg-light-grey:			#eaeaea;
+$bg-white:				#ffffff;
+
+// Font colors: 
+$font-dark:             #181818;
+$font-white:			#ffffff;
+
+// animation
+$expo:              all 500ms cubic-bezier(0.190, 1.000, 0.220, 1.000);
+$smooth:            cubic-bezier(.49, .06, .21, .98);
+
+
+//--------------------------------------------------
+//Media Query
+//--------------------------------------------------
+$xl-width: 1599px;
+$lg-width: 1499px;
+$md-width: 1199px;
+$sm-width: 991px;
+$xs-width: 767px;
+$xxs-width: 575px;
+
+
+@mixin xl {
+  @media (max-width: #{$xl-width}) {
+    @content;
+  }
+} 
+
+@mixin lg {
+  @media (max-width: #{$lg-width}) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (max-width: #{$md-width}) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: #{$sm-width}) {
+    @content;
+  }
+}
+
+@mixin xs {
+  @media (max-width: #{$xs-width}) {
+    @content;
+  }
+}
+ 
+@mixin xxs {
+  @media (max-width: #{$xxs-width}) {
+    @content;
+  }
+}
+
+
+//--------------------------------------------------
+//Mixins
+//--------------------------------------------------
+
+@mixin centerize {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin clearfix {
+    content: '';
+    display: table;
+    clear: both;
+}
