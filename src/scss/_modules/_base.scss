@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'mixins';
 
 /*--------------------------------------------------
 Base
@@ -36,15 +37,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-    color: $font-dark;
 
     &:hover, &:focus {
-        color: $font-dark;
+       
         text-decoration: none;
     }
 
     &:active, &:visited {
-        color: $font-dark;
+       
     }
 }
  

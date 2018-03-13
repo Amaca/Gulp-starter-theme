@@ -295,7 +295,7 @@ gulp.task('webserver', function () {
 /************
 *** START ***
 *************/
-gulp.task('start', [
+gulp.task('default', [
     //CSS
     'sass',
     'sass:watch',

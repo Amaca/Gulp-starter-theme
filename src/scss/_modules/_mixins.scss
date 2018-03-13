@@ -1,0 +1,77 @@
+
+//--------------------------------------------------
+//Media Query
+//--------------------------------------------------
+$xl-width: 1560px;
+$lg-width: 1499px;
+$md-width: 1199px;
+$sm-width: 991px;
+$xs-width: 767px;
+$xxs-width: 575px;
+
+
+@mixin xl {
+  @media (max-width: #{$xl-width}) {
+    @content;
+  }
+} 
+
+@mixin lg {
+  @media (max-width: #{$lg-width}) {
+    @content;
+  }
+} 
+
+@mixin md {
+  @media (max-width: #{$md-width}) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: #{$sm-width}) {
+    @content;
+  }
+}
+
+@mixin xs {
+  @media (max-width: #{$xs-width}) {
+    @content;
+  }
+}
+ 
+@mixin xxs {
+  @media (max-width: #{$xxs-width}) {
+    @content;
+  }
+}
+
+
+//--------------------------------------------------
+//Mixins
+//--------------------------------------------------
+
+//Centerize
+@mixin centerize {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+//Alpha Clear Fix
+@mixin clearfix {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+//Alpha Txt
+@mixin alphatxt($color, $perc) {
+    color: rgba( $color, $perc ) ;
+}
+
+//Alpha Bg
+@mixin alphabg($color, $perc) {
+    background: rgba( $color, $perc ) ;
+}    
