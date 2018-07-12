@@ -21,7 +21,6 @@ var es6promise = require('es6-promise'),
  * ---SASS:WATCH
  * ---SASS:VENDOR
  * ---SASS:VENDOR-MINIFY
- * ---SASS:VENDOR-WATCH
  * ---SASS:BOOTSTRAP
  * -JS
  * ---JS MINIFY
@@ -171,21 +170,6 @@ gulp.task('sass:vendor', function () {
     .pipe(rename({ dirname: '' }))
     .pipe(gulp.dest('./dist/css/vendor'))
 
-});
-
-
-/*************************
-*** SASS VENDOR MINIFY ***
-*************************/
-gulp.task('sass:vendor-minify', ['sass:vendor'], function () {
-    console.log('MINIFYING VENDOR SASS');
-    return gulp.src(
-        './dist/css/vendor/**/*.css'
-    )
-    // minify
-    .pipe(cssmin())
-    .pipe(concat('vendor.min.css'))
-    .pipe(gulp.dest('./dist/css/vendor'));
 });
 
 
