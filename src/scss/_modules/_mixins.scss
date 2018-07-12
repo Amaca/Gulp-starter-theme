@@ -46,6 +46,30 @@ $xxs-width: 575px;
   }
 }
 
+//tablet portrait
+@mixin tablet-portrait {
+    @media screen and (orientation: portrait) 
+    and (max-device-width: 1024px) {
+        @content;
+    }
+}
+
+//tablet landscape
+@mixin tablet-landscape {
+    @media screen and (orientation: landscape) 
+    and (max-device-width: 1024px) {
+        @content;
+    }
+}
+ 
+//phone landscape
+@mixin phone-landscape {
+    @media screen and (orientation: landscape) 
+    and (max-device-width: 768px) {
+        @content;
+    }
+}
+
 
 //--------------------------------------------------
 //Mixins
