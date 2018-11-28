@@ -20,7 +20,6 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.4",
-    //"gulp-tfs": "0.0.9",
     "gulp-uglify": "^3.0.0",
     "gulp-webserver": "^0.9.1",
     "node-sass": "^4.7.2"
