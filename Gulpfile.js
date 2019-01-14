@@ -15,23 +15,21 @@ var es6promise = require('es6-promise'),
     concat = require('gulp-concat');
 
 /*
- * -SASS
- * ---SASS:MINIFY
- * ---SASS:WATCH
- * ---SASS:VENDOR
- * ---SASS:VENDOR-MINIFY
- * ---SASS:BOOTSTRAP
- * -JS
- * ---JS MINIFY
- * ---JS WATCH
- * ---JS VENDOR
- * ---JS VENDOR MINIFY
- * ---JS VENDOR WATCH
- * -JQUERY
- * -IMAGES
- * -FONTS
- * -WEBSERVER
- */
+* sass
+* sass:vendor
+* sass:watch
+* css
+* css:watch
+* css:minify
+* css:vendor-minify
+* js
+* js:vendor
+* js:watch
+* js:minify
+* js:vendor-minify
+* minify
+* webserver
+*/
 
 
 var head = [
@@ -43,7 +41,7 @@ var head = [
 
 /***********
 *** SASS ***
-************/
+***********/
 gulp.task('sass', function () {
     console.log('COMPILING SASS');
     return gulp.src(
@@ -61,37 +59,11 @@ gulp.task('sass', function () {
     }))
     .pipe(sourcemaps.write())
     .pipe(rename({ dirname: '' }))
-    .pipe(gulp.dest('./dist/css/'))
-   
+    .pipe(gulp.dest('./dist/css/')) 
 });
+
 
 /******************
-*** SASS MINIFY ***
-******************/
-gulp.task('sass:minify', ['sass'], function () {
-    console.log('MINIFYING SASS');
-    return gulp.src(
-        './dist/css/main.css'
-    )
-    .pipe(cssmin())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(gulp.dest('./dist/css'));
-});
-
-
-/***************** 
-*** SASS WATCH *** 
-******************/
-gulp.task('sass:watch', function () {
-    var watcher = gulp.watch('./src/scss/**/*.scss', ['sass']); 
-    watcher.on('change', function (e) {
-        console.log('watcher.on.change type: ' + e.type + ' path: ' + e.path);
-    });
-    return watcher;
-});
-
-
-/*****************
 *** SASS VENDOR ***
 ******************/
 gulp.task('sass:vendor', function () {
@@ -111,15 +83,65 @@ gulp.task('sass:vendor', function () {
     .pipe(sourcemaps.write())
     .pipe(rename({ dirname: '' }))
     .pipe(gulp.dest('./dist/css/vendor'))
+});
 
+
+/***************** 
+*** SASS WATCH *** 
+*****************/
+gulp.task('sass:watch', function () {
+    var watcher = gulp.watch('./src/scss/**/*.scss', ['css:minify']);
+    watcher.on('change', function (e) {
+        console.log('watcher.on.change type: ' + e.type + ' path: ' + e.path);
+    });
+    return watcher;
+});
+
+
+/************
+*** CSS *****
+************/
+gulp.task('css', function () {
+    return gulp.src('./src/css/**/*.css')
+        .pipe(gulp.dest('./dist/css/'));
+});
+
+
+/****************** 
+**** CSS WATCH **** 
+******************/
+gulp.task('css:watch', function () {
+    var watcher = gulp.watch(['./src/css/**/*.css'],
+    ['css:minify']);
+    watcher.on('change', function (e) {
+        console.log('watcher.on.change type: ' + e.type + ' path: ' + e.path);
+    });
+    return watcher;
+});
+
+
+/******************
+**** CSS MINIFY ***
+******************/
+gulp.task('css:minify', ['css', 'sass'], function () {
+    console.log('MINIFYING CSS');
+    return gulp.src([
+        './dist/css/**/*.css',
+        '!./dist/css/main.css',
+        '!./dist/css/vendor/**/*.css',
+        './dist/css/main.css'
+    ])
+    .pipe(cssmin())
+    .pipe(concat('main.min.css'))
+    .pipe(gulp.dest('./dist/css'));
 });
 
 
 /*************************
-*** SASS VENDOR MINIFY ***
+**** CSS VENDOR MINIFY ***
 *************************/
-gulp.task('sass:vendor-minify', ['sass:vendor'], function () {
-    console.log('MINIFYING VENDOR SASS');
+gulp.task('css:vendor-minify', ['sass:vendor'], function () {
+    console.log('MINIFYING VENDOR CSS');
     return gulp.src(
         './dist/css/vendor/**/*.css'
     )
@@ -130,37 +152,15 @@ gulp.task('sass:vendor-minify', ['sass:vendor'], function () {
 });
 
 
-/*********************
-*** SASS BOOTSTRAP ***
-**********************/
-gulp.task('sass:bootstrap', ['sass:vendor-minify'], function () {
-    console.log('COMPILING SASS BOOTSTRAP');
-    return gulp.src(
-        './src/scss/vendor/bootstrap/bootstrap.scss'
-        )
-        .pipe(plumber(function (error) {
-            console.log('sass error: compile plumber', error);
-        }))
-        .pipe(sourcemaps.init())
-        .pipe(sass().on('error', sass.logError))
-        .pipe(autoprefixer({
-            browsers: ['last 2 versions', 'Explorer >= 10', 'Android >= 4.1', 'Safari >= 7', 'iOS >= 7'],
-            cascade: false
-        }))
-        .pipe(sourcemaps.write())
-        .pipe(rename({ dirname: '' }))
-        .pipe(gulp.dest('./dist/css/vendor'))
-});
-
-
 /****************
 ****** JS  ******
-*****************/
+****************/
 gulp.task('js', function () {
-    console.log('COMPILING MAIN JS');
-    return gulp.src(
-        './src/js/main.js'
-    )
+    console.log('COMPILING JS');
+    return gulp.src([
+        './src/js/**/*.js',
+        '!./src/js/vendor/**/*.js'
+    ])
     .pipe(header(head))
     .pipe(plumber(function (error) {
         console.log('js error: compile plumber', error);
@@ -169,39 +169,13 @@ gulp.task('js', function () {
 });
 
 
-/***********************
-****** JS MINIFY *******
-***********************/
-gulp.task('js:minify', ['js'], function () {
-    console.log('MINIFY MAIN.JS')
-    return gulp.src(
-        './dist/js/main.js'
-    )
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(uglify())
-    .pipe(gulp.dest('./dist/js'))
-})
-
-
-/**********************
-******* JS WATCH ******
-***********************/
-gulp.task('js:watch', function () {
-    var watcher = gulp.watch('./src/js/main.js', ['js']);
-    watcher.on('change', function (e) {
-        console.log('watcher.on.change type: ' + e.type + ' path: ' + e.path);
-    });
-    return watcher;
-});
-
-
 /****************
 *** JS VENDOR ***
-*****************/
+****************/
 gulp.task('js:vendor', function () {
     console.log('COMPILING VENDOR JS');
     return gulp.src(
-        './src/js/vendor/**/!(jquery-)*.js'
+        './src/js/vendor/**/*.js'
     )
     .pipe(plumber(function (error) {
         console.log('js error: compile plumber', error);
@@ -210,25 +184,14 @@ gulp.task('js:vendor', function () {
 });
 
 
-/******************************
-****** JS VENDOR MINIFY *******
-******************************/
-gulp.task('js:vendor-minify', ['js:vendor'], function () {
-    console.log('MINIFY VENDOR JS')
-    return gulp.src(
-        './dist/js/vendor/*.js'
-    )
-    .pipe(uglify())
-    .pipe(concat('vendor.min.js'))
-    .pipe(gulp.dest('./dist/js/vendor'));
-})
-
-
-/*****************************
-******* JS VENDOR WATCH ******
-*****************************/
-gulp.task('js:vendor-watch', function () {
-    var watcher = gulp.watch('./src/js/vendor/**/!(jquery-)*.js', ['js:vendor']);
+/**********************
+******* JS WATCH ******
+**********************/
+gulp.task('js:watch', function () {
+    var watcher = gulp.watch([
+        './src/js/**/*.js',
+        '!./src/js/vendor/**/*.js'
+    ], ['js:minify']);
     watcher.on('change', function (e) {
         console.log('watcher.on.change type: ' + e.type + ' path: ' + e.path);
     });
@@ -236,38 +199,40 @@ gulp.task('js:vendor-watch', function () {
 });
 
 
-
-/************* 
-*** JQUERY ***
-*************/
-gulp.task('jquery', function () {
-    return gulp.src('./src/js/vendor/jquery-3.1.0.min.js')
-        .pipe(gulp.dest('./dist/js/vendor'));
-});
-
-
-/*************
-*** IMAGES ***
-**************/
-gulp.task('images', function () {
-    return gulp.src('./src/img/*.+(png|jpg|jpeg|gif|svg)')
-        .pipe(imagemin())
-        .pipe(gulp.dest('./dist/img'));
-});
+/***********************
+****** JS MINIFY *******
+***********************/
+gulp.task('js:minify', ['js'], function () {
+    console.log('MINIFY JS')
+    return gulp.src([
+        './src/js/**/*.js',
+        '!./src/js/main.js',
+        '!./src/js/vendor/**/*.js',
+        './src/js/main.js'
+    ])
+    .pipe(concat('main.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('./dist/js'))
+})
 
 
-/************
-*** FONTS ***
-*************/
-gulp.task('fonts', function () {
-    return gulp.src('./src/fonts/*')
-        .pipe(gulp.dest('./dist/fonts'));
-});
+/******************************
+****** JS VENDOR MINIFY *******
+******************************/
+gulp.task('js:vendor-minify', ['js:vendor'], function () {
+    console.log('MINIFY VENDOR JS')
+    return gulp.src([
+        './dist/js/vendor/!(jquery-)*.js'
+    ])
+    .pipe(uglify())
+    .pipe(concat('vendor.min.js'))
+    .pipe(gulp.dest('./dist/js/vendor'));
+})
 
 
 /****************
 *** WEBSERVER ***
-*****************/
+****************/
 gulp.task('webserver', function () {
     return gulp.src('./')
         .pipe(webserver({
@@ -279,42 +244,30 @@ gulp.task('webserver', function () {
 });
 
 
-/************
-*** START ***
-*************/
-gulp.task('default', [
-    //CSS
-    'sass',
-    'sass:watch',
-    'sass:vendor',
-    //JS
-    'js',
-    'js:watch',
-    'js:vendor',
-    'js:vendor-watch',
-    //VARIOUS
-    'webserver'
-]);
-
-
 /*************
 *** MINIFY ***
-**************/
+*************/
 gulp.task('minify', [
-    'sass:minify',
-    'sass:vendor-minify',
+    'css:minify',
+    'css:vendor-minify',
     'js:minify',
     'js:vendor-minify'
 ]);
 
 
 /**************
-*** PUBLISH ***
+*** DEFAULT ***
 **************/
-gulp.task('publish', [
+gulp.task('default', [
+    //build and minify
     'minify',
-    'jquery',
-    'images',
-    'jquery',
-    'fonts'
+    //vendor
+    'sass:vendor',
+    'js:vendor',
+    //watch
+    'sass:watch',
+    'css:watch',
+    'js:watch',
+    //VARIOUS
+    'webserver'
 ]);
