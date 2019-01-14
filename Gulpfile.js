@@ -27,6 +27,10 @@ var es6promise = require('es6-promise'),
 * js:watch
 * js:minify
 * js:vendor-minify
+* tfs
+* checkout:css
+* checkout:js
+* checkout:all
 * minify
 * webserver
 */
@@ -54,7 +58,7 @@ gulp.task('sass', function () {
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(autoprefixer({
-        browsers: ['last 2 versions', 'Explorer >= 10', 'Android >= 4.1', 'Safari >= 7', 'iOS >= 7'],
+        browsers: ['last 2 versions', 'Explorer >= 11', 'Android >= 4.1', 'Safari >= 7', 'iOS >= 7'],
         cascade: false
     }))
     .pipe(sourcemaps.write())
@@ -77,7 +81,7 @@ gulp.task('sass:vendor', function () {
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(autoprefixer({
-        browsers: ['last 2 versions', 'Explorer >= 10', 'Android >= 4.1', 'Safari >= 7', 'iOS >= 7'],
+        browsers: ['last 2 versions', 'Explorer >= 11', 'Android >= 4.1', 'Safari >= 7', 'iOS >= 7'],
         cascade: false
     }))
     .pipe(sourcemaps.write())
@@ -111,8 +115,7 @@ gulp.task('css', function () {
 **** CSS WATCH **** 
 ******************/
 gulp.task('css:watch', function () {
-    var watcher = gulp.watch(['./src/css/**/*.css'],
-    ['css:minify']);
+    var watcher = gulp.watch('./src/css/**/*.css', ['css:minify']);
     watcher.on('change', function (e) {
         console.log('watcher.on.change type: ' + e.type + ' path: ' + e.path);
     });
@@ -211,7 +214,9 @@ gulp.task('js:minify', ['js'], function () {
         './src/js/main.js'
     ])
     .pipe(concat('main.min.js'))
-    .pipe(uglify())
+    .pipe(uglify().on('error', function (e) {
+        console.log(e);
+    }))
     .pipe(gulp.dest('./dist/js'))
 })
 
@@ -224,10 +229,59 @@ gulp.task('js:vendor-minify', ['js:vendor'], function () {
     return gulp.src([
         './dist/js/vendor/!(jquery-)*.js'
     ])
-    .pipe(uglify())
+    .pipe(uglify().on('error', function (e) {
+        console.log(e);
+    }))
     .pipe(concat('vendor.min.js'))
     .pipe(gulp.dest('./dist/js/vendor'));
 })
+
+
+/***********************
+*** TFS CSS CHECKOUT ***
+***********************/
+gulp.task('checkout:css', function () {
+    return gulp.src([
+        './dist/css/*.css'
+    ])
+      .pipe(tfs.checkout())
+});
+
+
+/***********************
+*** TFS JS CHECKOUT ***
+***********************/
+gulp.task('checkout:js', function () {
+    return gulp.src([
+        './dist/js/*.js',
+    ])
+    .pipe(tfs.checkout())
+});
+
+
+/***********************
+*** TFS CHECKOUT ALL ***
+***********************/
+gulp.task('checkout:all', function () {
+    return gulp.src([
+        './dist/css/*.css',
+        './dist/css/**/.css',
+        './dist/js/*.js',
+        './dist/js/**/*.js',
+    ])
+    .pipe(tfs.checkout())
+});
+
+
+/*************
+*** MINIFY ***
+*************/
+gulp.task('minify', [
+    'css:minify',
+    'css:vendor-minify',
+    'js:minify',
+    'js:vendor-minify'
+]);
 
 
 /****************
@@ -242,17 +296,6 @@ gulp.task('webserver', function () {
             open: true
         }));
 });
-
-
-/*************
-*** MINIFY ***
-*************/
-gulp.task('minify', [
-    'css:minify',
-    'css:vendor-minify',
-    'js:minify',
-    'js:vendor-minify'
-]);
 
 
 /**************

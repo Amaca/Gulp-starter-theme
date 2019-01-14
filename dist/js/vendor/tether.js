@@ -8,7 +8,7 @@
   } else {
     root.Tether = factory();
   }
-}(this, function(require, exports, module) {
+}(window, function(require, exports, module) {
 
 'use strict';
 
