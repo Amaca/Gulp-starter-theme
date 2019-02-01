@@ -288,8 +288,9 @@ gulp.task('minify', [
 *** WEBSERVER ***
 ****************/
 gulp.task('webserver', function () {
-    return gulp.src('./')
+    return gulp.src('./dist')
         .pipe(webserver({
+            fallback: 'index.html',
             livereload: true,
             directoryListing: false,
             port: 40000,
