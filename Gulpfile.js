@@ -11,7 +11,6 @@ var es6promise = require('es6-promise'),
     webserver = require('gulp-webserver'),
     cssmin = require('gulp-cssmin'),
     uglify = require('gulp-uglify'),
-    imagemin = require('gulp-imagemin'),
     concat = require('gulp-concat'),
     tfs = require('gulp-tfs');
 
